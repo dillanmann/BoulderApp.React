@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ApolloProvider } from 'react-apollo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-
+import registerServiceWorker from './registerServiceWorker';
+import client from './src/apollo';
 
 ReactDOM.render(
-  <App/>,
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
   document.getElementById('root')
 );
 serviceWorker.unregister();

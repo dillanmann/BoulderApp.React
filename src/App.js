@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Link , Switch, Route } from 'react-router-dom';
+import { Nav } from 'react-bootstrap';
+import { ApolloProvider } from 'react-apollo';
+import client from './apollo';
+import { createBrowserHistory } from 'history';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Home from './Home';
+import CenterDetails from './CenterDetails';
+import CircuitDetails from './CircuitDetails';
+import ProblemDetails from './ProblemDetails';
+
+const history = createBrowserHistory();
+
+class App extends Component {
+  render() {
+    return (
+    <ApolloProvider client={client}>
+      <Router history={history}>
+      <Nav>
+        <Nav.Item>
+          <Link to="/home">Home</Link>
+        </Nav.Item>
+      </Nav>
+      <Switch>
+        <Route path="/home">
+          <Home/>
+        </Route>
+        <Route path="/center/:id" children={x => <CenterDetails id={x.match.params.id} />}/>
+        <Route path="/circuit/:id" children={x => <CircuitDetails history={x.history} id={x.match.params.id} />}/>
+        <Route path="/problem/:id" children={x => <ProblemDetails id={x.match.params.id} />}/>
+      </Switch>
+      </Router>
+      </ApolloProvider>
+    );
+  }
 }
 
 export default App;
