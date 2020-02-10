@@ -26,9 +26,9 @@ class App extends Component {
         <Route path="/home">
           <Home/>
         </Route>
-        <Route path="/center/:id" children={x => <CenterDetails id={x.match.params.id} />}/>
+        <Route path="/center/:id" children={x => <CenterDetails history={x.history} id={x.match.params.id} />}/>
         <Route path="/circuit/:id" children={x => <CircuitDetails history={x.history} id={x.match.params.id} />}/>
-        <Route path="/problem/:id" children={x => <ProblemDetails id={x.match.params.id} />}/>
+        <Route path="/problem/:id" children={x => <ProblemDetails history={x.history} id={x.match.params.id} />}/>
       </Switch>
       </Router>
       </ApolloProvider>
