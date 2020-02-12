@@ -57,8 +57,8 @@ class CircuitDetails extends React.Component{
             problemGrade: ''
         }
     }
-    onChangeProblemName = evt => this.setState( { problemName: evt.target.value } )
-    onChangeProblemGrade = evt => this.setState( { problemGrade: evt.target.value } )
+    
+    onStateChange = evt => this.setState({ [evt.target.name]: evt.target.value });
     setShowAddProblemModal = state => this.setState( { showAddProblemModal: state } )
     render(){
     let id = this.props.id;
@@ -67,58 +67,56 @@ class CircuitDetails extends React.Component{
     <Query query={GET_CIRCUIT_BY_ID} variables={{id}}>
     {({ loading, data, refetch }) => !loading && (
         <Container>
-        <AddProblemModal 
-        show={this.state.showAddProblemModal} 
-        handleClose={() => this.setShowAddProblemModal(false)}
-        problemName={this.state.problemName}
-        onChangeProblemName={this.onChangeProblemName}
-        problemGrade={this.state.problemGrade}
-        onChangeProblemGrade={this.onChangeProblemGrade}
-        circuitId={id}
-        onSuccess={() => {
-            this.setShowAddProblemModal(false);
-            refetch();
-        }}
-        />
-        <div>
-            <h1>{data.circuit.name}</h1>
-            <h4>Problems</h4>
-            <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
-            <Table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Grade</th>
-                    <th/>
-                </tr>
-            </thead>
-            <tbody>
-            {data.circuit.problems.map(problem => 
-            {
-                return(
-                    <tr key={problem.id} onClick={() => this.history.push("/problem/" + problem.id)}>
-                        <td>{problem.name}</td>
-                        <td>{problem.grade}</td>
-                        <td>                      
-                            <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={TrashIcon} />
-                        </td>
+            <AddProblemModal 
+            show={this.state.showAddProblemModal} 
+            handleClose={() => this.setShowAddProblemModal(false)}
+            problemName={this.state.problemName}
+            problemGrade={this.state.problemGrade}
+            onChange={this.onStateChange}
+            circuitId={id}
+            onSuccess={() => {
+                this.setShowAddProblemModal(false);
+                refetch();
+            }}/>
+            <div>
+                <h1>{data.circuit.name}</h1>
+                <h4>Problems</h4>
+                <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
+                <Table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Grade</th>
+                        <th/>
                     </tr>
-                )
-                })}
-            </tbody>                
-            </Table>
+                </thead>
+                <tbody>
+                {data.circuit.problems.map(problem => 
+                {
+                    return(
+                        <tr key={problem.id} onClick={() => this.history.push("/problem/" + problem.id)}>
+                            <td>{problem.name}</td>
+                            <td>{problem.grade}</td>
+                            <td>                      
+                                <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={TrashIcon} />
+                            </td>
+                        </tr>
+                    )
+                    })}
+                </tbody>                
+                </Table>
+                </div>
+                    <Row>
+                        <Col xs={4}>
+                        <Button variant='success' onClick={() => this.setShowAddProblemModal(true)}>Add Problem</Button>
+                        <DeleteButton mutation={DELETE_CIRCUIT_BY_ID} itemId={id} afterDelete={() => this.history.goBack()} text='Delete Circuit'/>
+                        </Col>
+                        <Col xs={7}/>
+                        <Col xs={1}>
+                            <Button onClick={() => this.history.goBack()}>Back</Button>
+                        </Col>
+                    </Row>
             </div>
-                <Row>
-                    <Col xs={4}>
-                    <Button variant='success' onClick={() => this.setShowAddProblemModal(true)}>Add Problem</Button>
-                    <DeleteButton mutation={DELETE_CIRCUIT_BY_ID} itemId={id} afterDelete={() => this.history.goBack()} text='Delete Circuit'/>
-                    </Col>
-                    <Col xs={7}/>
-                    <Col xs={1}>
-                        <Button onClick={() => this.history.goBack()}>Back</Button>
-                    </Col>
-                </Row>
-        </div>
         </Container>
     )}
   </Query>
@@ -126,7 +124,7 @@ class CircuitDetails extends React.Component{
 }
 }
 
-const AddProblemModal = ( { show, handleClose, problemName, onChangeProblemName, problemGrade, onChangeProblemGrade, circuitId, onSuccess } ) => {
+const AddProblemModal = ( { show, handleClose, problemName, problemGrade, onChange, circuitId, onSuccess } ) => {
 
     const createInputFromState = () => ({
         input: {
@@ -159,11 +157,11 @@ const AddProblemModal = ( { show, handleClose, problemName, onChangeProblemName,
                 <Form>
                     <Form.Group>
                         <Form.Label>Problem name</Form.Label>
-                        <Form.Control type='text' onChange={onChangeProblemName} value={problemName}></Form.Control>
+                        <Form.Control type='text' name='problemName' onChange={onChange} value={problemName}></Form.Control>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Grade</Form.Label>
-                        <Form.Control as='select' onChange={onChangeProblemGrade} value={problemGrade}>
+                        <Form.Control as='select' name='problemGrade' onChange={onChange} value={problemGrade}>
                             {data.vGrades.map(grade => <option key={grade}>{grade}</option>)}
                         </Form.Control>
                     </Form.Group>

@@ -21,9 +21,9 @@ export default function CenterDetail(){
 
   return (<Query query={GET_CENTERS}>
     {({ loading, data }) => !loading && (
-      data.centers.map(center => (
-        <Container>
-          <Card bg="dark" text="white" style={{ width: '18rem' }}>
+      <Container>
+      {data.centers.map(center => (
+          <Card key={center.id} bg="dark" text="white" style={{ width: '18rem' }}>
             <Card.Body>
               <Card.Title>{center.name}</Card.Title>
               <Card.Text>Circuits: {center.circuits.length}</Card.Text>
@@ -32,8 +32,8 @@ export default function CenterDetail(){
               </Button>
             </Card.Body>
           </Card>
-        </Container>
-      ))
+      ))}
+      </Container>
     )}
   </Query>
   )

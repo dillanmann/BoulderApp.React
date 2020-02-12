@@ -1,9 +1,9 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Container, ListGroup, Col, Row, Button, Form, Modal } from 'react-bootstrap';
-import { useMutation } from '@apollo/react-hooks';
+import { Container, ListGroup, Col, Row, Button, Form } from 'react-bootstrap';
 import DeleteButton from './DeleteButton';
+import CreationModal from './CreationModal';
 
 
 const GET_CENTER_BY_ID =
@@ -52,10 +52,36 @@ class CenterDetails extends React.Component{
         }
     }
 
-    onChangeCircuitName = evt => this.setState( { circuitName: evt.target.value } )
-    onChangeCircuitUpDate = evt => this.setState( { circuitUpDate: evt.target.value } )
-    onChangeCircuitDownDate = evt => this.setState( { circuitDownDate: evt.target.value } )
+    createInputFromState = () => ({
+        input: {
+            centerId: this.id,
+            circuit: {
+              name: this.state.circuitName,
+              dateUp: this.state.circuitUpDate,
+              dateDown: this.state.circuitDownDate
+            },
+          }        
+    });
+    onStateChange = evt => this.setState({ [evt.target.name]: evt.target.value });
     setShowAddCircuitModal = state => this.setState( { showAddCircuitModal: state } )
+
+    AddCircuitModalBody = () => {
+        return (
+        <Form>
+            <Form.Group>
+                <Form.Label>Circuit name</Form.Label>
+                <Form.Control type='text' name='circuitName' onChange={this.onStateChange} value={this.state.circuitName}></Form.Control>
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Date set</Form.Label>
+                <Form.Control type='date' name='circuitUpDate' onChange={this.onStateChange} value={this.state.circuitUpDate}></Form.Control>
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Date down</Form.Label>
+                <Form.Control type='date' name='circuitDownDate' onChange={this.onStateChange} value={this.state.circuitDownDate}></Form.Control>
+            </Form.Group>
+        </Form>)
+    }
 
     render(){
         const id = this.id;
@@ -63,20 +89,18 @@ class CenterDetails extends React.Component{
             <Query query={GET_CENTER_BY_ID} variables={{id}}>
             {({ loading, data, refetch }) => !loading && (
                 <Container>
-                <AddCircuitModal 
+                <CreationModal 
                     show={this.state.showAddCircuitModal}
+                    title='Add Circuit'
                     handleClose={() => this.setShowAddCircuitModal(false)}
-                    centerId = {id}
-                    circuitName={this.state.circuitName}
-                    onChangeCircuitName={this.onChangeCircuitName}
-                    circuitUpDate={this.state.circuitUpDate}
-                    onChangeCircuitUpDate={this.onChangeCircuitUpDate}
-                    circuitDownDate={this.state.circuitDownDate}
-                    onChangeCircuitDownDate={this.onChangeCircuitDownDate}
+                    onChange={this.onStateChange}
                     onSuccess={() => {
                         this.setShowAddCircuitModal(false);
                         refetch();
                     }}
+                    createInputFromState={this.createInputFromState}
+                    mutation={CREATE_CIRCUIT_IN_CENTER}
+                    Body={this.AddCircuitModalBody}
                 />
                 <div>
                     <h1>{data.center.name}</h1>
@@ -110,56 +134,6 @@ class CenterDetails extends React.Component{
             </Query>
         )
     }
-}
-
-const AddCircuitModal = ( { show, handleClose, circuitName, onChangeCircuitName, circuitUpDate, onChangeCircuitUpDate, circuitDownDate, onChangeCircuitDownDate, centerId, onSuccess } ) => {
-
-    const createInputFromState = () => ({
-        input: {
-            centerId: centerId,
-            circuit: {
-              name: circuitName,
-              dateUp: circuitUpDate,
-              dateDown: circuitDownDate
-            },
-          }        
-    });
-
-    const [ mutate ] = useMutation(CREATE_CIRCUIT_IN_CENTER, 
-    { 
-        variables: createInputFromState(),
-        onCompleted: () => onSuccess()            
-    });
-
-    const handleClick = () => mutate();
-    
-    return(        
-        <Modal show={show}>
-            <Modal.Header>
-                <Modal.Title>Add Circuit</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Circuit name</Form.Label>
-                        <Form.Control type='text' onChange={onChangeCircuitName} value={circuitName}></Form.Control>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Date set</Form.Label>
-                        <Form.Control type='date' onChange={onChangeCircuitUpDate} value={circuitUpDate}></Form.Control>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Date down</Form.Label>
-                        <Form.Control type='date' onChange={onChangeCircuitDownDate} value={circuitDownDate}></Form.Control>
-                    </Form.Group>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant='secondary' onClick={handleClose}>Close</Button>
-                <Button variant='primary' onClick={handleClick}>Add</Button>
-            </Modal.Footer>
-        </Modal>
-        );
 }
 
 export default CenterDetails;
