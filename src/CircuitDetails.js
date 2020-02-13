@@ -1,11 +1,13 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Container, Table,  Row, Col, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Table,  Row, Col, Button, Form } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 
 import DeleteButton from './DeleteButton';
+import CreationModal from './CreationModal';
+
 
 const GET_VGRADES = 
     gql`{ vGrades }`;
@@ -39,7 +41,7 @@ const DELETE_CIRCUIT_BY_ID =
         }
     }`;
 
-const ADD_PROBLEM_TO_CIRCUIT = 
+const CREATE_PROBLEM_IN_CIRCUIT = 
     gql`
     mutation CreateProblemInCircuit($input: CreateProblemInCircuitInput!){
         createProblemInCircuit(input: $input){
@@ -51,6 +53,7 @@ class CircuitDetails extends React.Component{
     constructor(props){
         super(props);
         this.history = props.history;
+        this.id = props.id;
         this.state = {
             showAddProblemModal: false,
             problemName: '',
@@ -58,121 +61,103 @@ class CircuitDetails extends React.Component{
         }
     }
     
+    
+    createInputFromState = () => ({
+        input: {
+            circuitId: this.id,
+            problem: {
+              name: this.state.problemName,
+              grade: this.state.problemGrade,
+            },
+          }        
+    });    
+
     onStateChange = evt => this.setState({ [evt.target.name]: evt.target.value });
     setShowAddProblemModal = state => this.setState( { showAddProblemModal: state } )
     render(){
     let id = this.props.id;
 
     return (
-    <Query query={GET_CIRCUIT_BY_ID} variables={{id}}>
-    {({ loading, data, refetch }) => !loading && (
-        <Container>
-            <AddProblemModal 
-            show={this.state.showAddProblemModal} 
-            handleClose={() => this.setShowAddProblemModal(false)}
-            problemName={this.state.problemName}
-            problemGrade={this.state.problemGrade}
-            onChange={this.onStateChange}
-            circuitId={id}
-            onSuccess={() => {
-                this.setShowAddProblemModal(false);
-                refetch();
-            }}/>
-            <div>
-                <h1>{data.circuit.name}</h1>
-                <h4>Problems</h4>
-                <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
-                <Table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Grade</th>
-                        <th/>
-                    </tr>
-                </thead>
-                <tbody>
-                {data.circuit.problems.map(problem => 
-                {
-                    return(
-                        <tr key={problem.id} onClick={() => this.history.push("/problem/" + problem.id)}>
-                            <td>{problem.name}</td>
-                            <td>{problem.grade}</td>
-                            <td>                      
-                                <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={TrashIcon} />
-                            </td>
+        <Query query={GET_CIRCUIT_BY_ID} variables={{id}}>
+        {({ loading, data, refetch }) => !loading && (
+            <Container>
+                <CreationModal 
+                    show={this.state.showAddProblemModal}
+                    title='Add Problem'
+                    handleClose={() => this.setShowAddProblemModal(false)}
+                    onChange={this.onStateChange}
+                    onSuccess={() => {
+                        this.setShowAddProblemModal(false);
+                        refetch();
+                    }}
+                    createInputFromState={this.createInputFromState}
+                    mutation={CREATE_PROBLEM_IN_CIRCUIT}
+                    Body={this.AddProblemModalBody}
+                />
+                <div>
+                    <h1>{data.circuit.name}</h1>
+                    <h4>Problems</h4>
+                    <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
+                    <Table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Grade</th>
+                            <th/>
                         </tr>
-                    )
-                    })}
-                </tbody>                
-                </Table>
+                    </thead>
+                    <tbody>
+                    {data.circuit.problems.map(problem => 
+                    {
+                        return(
+                            <tr key={problem.id} onClick={() => this.history.push("/problem/" + problem.id)}>
+                                <td>{problem.name}</td>
+                                <td>{problem.grade}</td>
+                                <td>                      
+                                    <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={TrashIcon} />
+                                </td>
+                            </tr>
+                        )
+                        })}
+                    </tbody>                
+                    </Table>
+                    </div>
+                        <Row>
+                            <Col xs={4}>
+                            <Button variant='success' onClick={() => this.setShowAddProblemModal(true)}>Add Problem</Button>
+                            <DeleteButton mutation={DELETE_CIRCUIT_BY_ID} itemId={id} afterDelete={() => this.history.goBack()} text='Delete Circuit'/>
+                            </Col>
+                            <Col xs={7}/>
+                            <Col xs={1}>
+                                <Button onClick={() => this.history.goBack()}>Back</Button>
+                            </Col>
+                        </Row>
                 </div>
-                    <Row>
-                        <Col xs={4}>
-                        <Button variant='success' onClick={() => this.setShowAddProblemModal(true)}>Add Problem</Button>
-                        <DeleteButton mutation={DELETE_CIRCUIT_BY_ID} itemId={id} afterDelete={() => this.history.goBack()} text='Delete Circuit'/>
-                        </Col>
-                        <Col xs={7}/>
-                        <Col xs={1}>
-                            <Button onClick={() => this.history.goBack()}>Back</Button>
-                        </Col>
-                    </Row>
-            </div>
-        </Container>
-    )}
-  </Query>
-    )
-}
-}
+            </Container>
+        )}
+    </Query>
+        )
+    }
 
-const AddProblemModal = ( { show, handleClose, problemName, problemGrade, onChange, circuitId, onSuccess } ) => {
+    AddProblemModalBody = () => {
+        let { data, loading } = useQuery(GET_VGRADES);
 
-    const createInputFromState = () => ({
-        input: {
-            circuitId: circuitId,
-            problem: {
-              name: problemName,
-              grade: problemGrade,
-            },
-          }        
-    });
+        if (loading) return <p>Loading...</p>
 
-    const [ mutate ] = useMutation(ADD_PROBLEM_TO_CIRCUIT, 
-    { 
-        variables: createInputFromState(),
-        onCompleted: () => onSuccess()            
-    });
-
-    const handleClick = () => mutate();
-
-    let { data, loading } = useQuery(GET_VGRADES);
-
-    if (loading) return <p>Loading...</p>
-    
-    return(        
-        <Modal show={show}>
-            <Modal.Header>
-                <Modal.Title>Add Problem</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Problem name</Form.Label>
-                        <Form.Control type='text' name='problemName' onChange={onChange} value={problemName}></Form.Control>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label>Grade</Form.Label>
-                        <Form.Control as='select' name='problemGrade' onChange={onChange} value={problemGrade}>
-                            {data.vGrades.map(grade => <option key={grade}>{grade}</option>)}
-                        </Form.Control>
-                    </Form.Group>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant='secondary' onClick={handleClose}>Close</Button>
-                <Button variant='primary' onClick={handleClick}>Add</Button>
-            </Modal.Footer>
-        </Modal>
-        );
+        return(
+        <Form>
+            <Form.Group>
+                <Form.Label>Problem name</Form.Label>
+                <Form.Control type='text' name='problemName' onChange={this.onStateChange} value={this.state.problemName}></Form.Control>
+            </Form.Group>
+            <Form.Group>
+                <Form.Label>Grade</Form.Label>
+                <Form.Control as='select' name='problemGrade' onChange={this.onStateChange} value={this.state.problemGrade}>
+                    {data.vGrades.map(grade => <option key={grade}>{grade}</option>)}
+                </Form.Control>
+            </Form.Group>
+        </Form>)
+    }
 }
 
 const TrashIcon = () => <FaTrash/>

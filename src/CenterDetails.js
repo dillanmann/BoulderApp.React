@@ -5,7 +5,6 @@ import { Container, ListGroup, Col, Row, Button, Form } from 'react-bootstrap';
 import DeleteButton from './DeleteButton';
 import CreationModal from './CreationModal';
 
-
 const GET_CENTER_BY_ID =
     gql`
     query GetCenterById($id: ID!){
