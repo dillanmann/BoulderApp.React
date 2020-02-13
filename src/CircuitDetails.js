@@ -57,7 +57,7 @@ class CircuitDetails extends React.Component{
                 <div>
                     <h1>{data.circuit.name}</h1>
                     <h4>Problems</h4>
-                    <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
+                    <div style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto', margin: '5px'}}>
                     <Table>
                     <thead>
                         <tr>

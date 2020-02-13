@@ -54,7 +54,7 @@ class Home extends React.Component {
                     mutation={CREATE_CENTER}
                     Body={this.AddCenterModalBody}
                 />
-          <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
+          <div style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto', margin: '5px'}}>
           <CardColumns>
           {data.centers.map(center => (
               <Card key={center.id} bg="dark" text="white" style={{ width: '18rem' }}>

@@ -72,7 +72,7 @@ class CenterDetails extends React.Component{
                 <div>
                     <h1>{data.center.name}</h1>
                     <h4>Circuits</h4>
-                    <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
+                    <div style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto', margin: '5px'}}>
                         <ListGroup>
                             {data.center.circuits.map(circuit => 
                             (
