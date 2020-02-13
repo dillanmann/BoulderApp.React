@@ -1,28 +1,10 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Container, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './DeleteButton';
-
-
-const GET_PROBLEM_BY_ID =
-    gql`
-    query GetProblemById($id: ID!){
-        problem(id: $id){
-            name
-            id
-            grade
-        }
-    }`;
-
-const DELETE_PROBLEM_BY_ID = 
-    gql`
-    mutation DeleteProblemById($id: ID!){
-        deleteProblem(id: $id){
-            result
-        }
-    }`;
+import { GET_PROBLEM_BY_ID } from './Constants/QueriesConstants';
+import { DELETE_PROBLEM_BY_ID } from './Constants/MutationConstants';
 
 export default (props) => {
     let id = props.id;

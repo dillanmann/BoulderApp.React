@@ -1,5 +1,4 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Container, Table,  Row, Col, Button, Form } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
@@ -7,47 +6,8 @@ import { useQuery } from '@apollo/react-hooks';
 
 import DeleteButton from './DeleteButton';
 import CreationModal from './CreationModal';
-
-
-const GET_VGRADES = 
-    gql`{ vGrades }`;
-
-const GET_CIRCUIT_BY_ID =
-    gql`
-    query GetCircuitById($id: ID!){
-        circuit(id: $id){
-            name
-            problems{
-                id
-                name
-                grade
-            }
-        }
-    }`;
-
-const DELETE_PROBLEM_BY_ID = 
-    gql`
-    mutation DeleteProblemById($id: ID!){
-        deleteProblem(id: $id){
-            result
-        }
-    }`;
-
-const DELETE_CIRCUIT_BY_ID = 
-    gql`
-    mutation DeleteCircuitById($id: ID!){
-        deleteCircuit(id: $id){
-            result
-        }
-    }`;
-
-const CREATE_PROBLEM_IN_CIRCUIT = 
-    gql`
-    mutation CreateProblemInCircuit($input: CreateProblemInCircuitInput!){
-        createProblemInCircuit(input: $input){
-          name
-        }
-      }`;
+import { GET_CIRCUIT_BY_ID, GET_VGRADES } from './Constants/QueriesConstants';
+import { CREATE_PROBLEM_IN_CIRCUIT, DELETE_CIRCUIT_BY_ID, DELETE_PROBLEM_BY_ID } from './Constants/MutationConstants';
 
 class CircuitDetails extends React.Component{
     constructor(props){

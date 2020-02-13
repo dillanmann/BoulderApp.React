@@ -1,20 +1,9 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Button, Card, Container} from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
-export const GET_CENTERS = gql`
-  query {
-    centers {
-      name
-      id
-      circuits{
-        name
-      }
-    }
-  }
-`;
+import { GET_CENTERS } from './Constants/QueriesConstants';
 
 export default function CenterDetail(){
   let history = useHistory();
@@ -22,6 +11,7 @@ export default function CenterDetail(){
   return (<Query query={GET_CENTERS}>
     {({ loading, data }) => !loading && (
       <Container>
+      <div style={{ maxHeight: 'calc(100vh - 180px)', overflow: 'auto', margin: '5px'}}>
       {data.centers.map(center => (
           <Card key={center.id} bg="dark" text="white" style={{ width: '18rem' }}>
             <Card.Body>
@@ -33,6 +23,7 @@ export default function CenterDetail(){
             </Card.Body>
           </Card>
       ))}
+      </div>
       </Container>
     )}
   </Query>

@@ -1,42 +1,10 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import { Container, ListGroup, Col, Row, Button, Form } from 'react-bootstrap';
 import DeleteButton from './DeleteButton';
 import CreationModal from './CreationModal';
-
-const GET_CENTER_BY_ID =
-    gql`
-    query GetCenterById($id: ID!){
-        center(id: $id){
-            name
-            circuits{
-                name
-                id
-                problems{
-                    id
-                }
-            }
-        }
-    }`;
-
-const CREATE_CIRCUIT_IN_CENTER =
-    gql`
-    mutation CreateCircuitInCenter($input: CreateCircuitInCenterInput!){
-        createCircuitInCenter(input: $input){
-            name
-        }
-    }
-    `;
-
-const DELETE_CENTER_BY_ID =
-    gql`
-        mutation DeleteCenterById($id: ID!){
-            deleteCenterById(id: $id){
-                result
-            }
-        }
-    `;
+import { GET_CENTER_BY_ID } from './Constants/QueriesConstants';
+import { CREATE_CIRCUIT_IN_CENTER, DELETE_CENTER_BY_ID } from './Constants/MutationConstants';
 
 class CenterDetails extends React.Component{
     constructor(props){
