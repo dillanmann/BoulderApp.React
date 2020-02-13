@@ -11,7 +11,7 @@ export const DELETE_CIRCUIT_BY_ID =
 export const DELETE_CENTER_BY_ID =
     gql`
         mutation DeleteCenterById($id: ID!){
-            deleteCenterById(id: $id){
+            deleteCenter(id: $id){
                 result
             }
         }
@@ -41,3 +41,12 @@ export const DELETE_PROBLEM_BY_ID =
             result
         }
     }`;
+
+export const CREATE_CENTER = 
+    gql`
+        mutation CreateCenter($input: CenterInput!){
+            createCenter(center: $input){
+                name
+            }
+        }
+    `;

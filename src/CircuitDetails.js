@@ -74,7 +74,7 @@ class CircuitDetails extends React.Component{
                                 <td>{problem.name}</td>
                                 <td>{problem.grade}</td>
                                 <td>                      
-                                    <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={TrashIcon} />
+                                    <DeleteButton mutation={DELETE_PROBLEM_BY_ID} itemId={problem.id} afterDelete={() => refetch()} IconComponent={() => <FaTrash/>} />
                                 </td>
                             </tr>
                         )
@@ -119,7 +119,5 @@ class CircuitDetails extends React.Component{
         </Form>)
     }
 }
-
-const TrashIcon = () => <FaTrash/>
 
 export default CircuitDetails;

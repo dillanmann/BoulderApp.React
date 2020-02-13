@@ -19,13 +19,12 @@ class App extends Component {
       <Router history={history}>
       <Nav>
         <Nav.Item>
-          <Link to="/home">Home</Link>
+          <Link to="/">Home</Link>
         </Nav.Item>
       </Nav>
       <Switch>
-        <Route path="/home">
-          <Home/>
-        </Route>
+        
+        <Route path="/" exact children={x => <Home history={x.history}/>} />          
         <Route path="/center/:id" children={x => <CenterDetails history={x.history} id={x.match.params.id} />}/>
         <Route path="/circuit/:id" children={x => <CircuitDetails history={x.history} id={x.match.params.id} />}/>
         <Route path="/problem/:id" children={x => <ProblemDetails history={x.history} id={x.match.params.id} />}/>
