@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/BoulderApp.React/static/js/main.470abeb8.chunk.js",
-    "main.js.map": "/BoulderApp.React/static/js/main.470abeb8.chunk.js.map",
+    "main.js": "/BoulderApp.React/static/js/main.6fb9d24b.chunk.js",
+    "main.js.map": "/BoulderApp.React/static/js/main.6fb9d24b.chunk.js.map",
     "runtime-main.js": "/BoulderApp.React/static/js/runtime-main.1906aef4.js",
     "runtime-main.js.map": "/BoulderApp.React/static/js/runtime-main.1906aef4.js.map",
     "static/css/2.47e06e2e.chunk.css": "/BoulderApp.React/static/css/2.47e06e2e.chunk.css",
-    "static/js/2.e87452ae.chunk.js": "/BoulderApp.React/static/js/2.e87452ae.chunk.js",
-    "static/js/2.e87452ae.chunk.js.map": "/BoulderApp.React/static/js/2.e87452ae.chunk.js.map",
+    "static/js/2.3d879521.chunk.js": "/BoulderApp.React/static/js/2.3d879521.chunk.js",
+    "static/js/2.3d879521.chunk.js.map": "/BoulderApp.React/static/js/2.3d879521.chunk.js.map",
     "index.html": "/BoulderApp.React/index.html",
-    "precache-manifest.4ea72c7d94dbee2192b4aeb7a09976cb.js": "/BoulderApp.React/precache-manifest.4ea72c7d94dbee2192b4aeb7a09976cb.js",
+    "precache-manifest.a3545a0f84ee19ea0d62ce9a1851809f.js": "/BoulderApp.React/precache-manifest.a3545a0f84ee19ea0d62ce9a1851809f.js",
     "service-worker.js": "/BoulderApp.React/service-worker.js",
     "static/css/2.47e06e2e.chunk.css.map": "/BoulderApp.React/static/css/2.47e06e2e.chunk.css.map",
-    "static/js/2.e87452ae.chunk.js.LICENSE": "/BoulderApp.React/static/js/2.e87452ae.chunk.js.LICENSE"
+    "static/js/2.3d879521.chunk.js.LICENSE": "/BoulderApp.React/static/js/2.3d879521.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.1906aef4.js",
     "static/css/2.47e06e2e.chunk.css",
-    "static/js/2.e87452ae.chunk.js",
-    "static/js/main.470abeb8.chunk.js"
+    "static/js/2.3d879521.chunk.js",
+    "static/js/main.6fb9d24b.chunk.js"
   ]
 }
